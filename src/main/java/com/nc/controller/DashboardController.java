@@ -1,5 +1,6 @@
 package com.nc.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nc.mapper.DashboardMapper;
 import com.nc.mapper.LoginMapper;
@@ -28,6 +29,33 @@ public class DashboardController {
             data=new ArrayList<>();
         }
         return ResponseEntity.ok(mapper.createObjectNode().putPOJO("data",data));
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<?> update(@RequestBody JsonNode node){
+        int result=0;
+        try {
+            int id=node.get("sNo").asInt();
+            String name=node.get("name").asText();
+            String  roll=node.get("roll").asText();
+            String address=node.get("address").asText();
+            boolean action=node.get("address").asBoolean();
+            result=dashboardMapper.update(id,name,roll,address,action);
+        }catch (Exception e){
+            result=0;
+        }
+        return ResponseEntity.ok(mapper.createObjectNode().putPOJO("data",result));
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") int id){
+        int result=0;
+        try {
+            result=dashboardMapper.delete(id);
+        }catch (Exception e){
+            result=0;
+        }
+        return ResponseEntity.ok(mapper.createObjectNode().putPOJO("data",result));
     }
 
 }
